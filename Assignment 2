@@ -217,9 +217,9 @@ public class Tetris extends GameEngine {
 
 		changeColor(white);
 		drawText(265, 45, "SCORE:", 18);
-		drawText(265, 65, toString(playerScore), 18);
+                drawText(265, 65, String.valueOf(playerScore), 18);
 		drawText(265, 85, "Level:", 18);
-		drawText(265, 105, toString(currentLevel), 18);
+                drawText(265, 105, String.valueOf(currentLevel), 18);
 	}
 
 	// Clear the board and start with a new piece
