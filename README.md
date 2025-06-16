@@ -78,7 +78,6 @@ Welcome to the Tetris Game project built using Java and object-oriented programm
     ```bash
     java -cp bin TetrisGame
     ```
-    *If your `TetrisGame.java` class is in a package, prefix it with the package name (e.g., `java -cp bin yourpackage.TetrisGame`).*
 
 ## 🗂️ Code Structure
 
