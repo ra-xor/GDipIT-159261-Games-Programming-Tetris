@@ -28,7 +28,6 @@ public class Renderer {
     // Constants for Next/Hold piece display, relative to their info panel X
     // position
     private static final int PREVIEW_PIECE_SIZE = 15;
-
     private static final int PREVIEW_SPACING_Y = 50; // Vertical space between previews
 
     public Renderer(TetrisGame game, Board[] boards, Piece[] pieces,
@@ -42,7 +41,7 @@ public class Renderer {
         this.gameStates = gameStates; // Array of player-specific states
         this.tileColors = tileColors;
         this.globalGameState = globalGameState; // Overall game state/menu manager
-        this.assetManager = new AssetManager(ge); // Initialize AssetManager here
+        this.assetManager = new AssetManager(ge); // Initialise AssetManager here
         this.assetManager.loadAll(); // Load assets once
     }
 
@@ -149,9 +148,16 @@ public class Renderer {
                 else
                     borderOffsetX = baseWallX + 230;
             }
-            drawBorderWalls(i, borderOffsetX);
 
+            drawBorderWalls(i, borderOffsetX);
             drawPlacedTiles(i, boardRenderOffsetX);
+
+            // 2.2a) First draw any row‐flashes 
+            drawRowFlashes(boardRenderOffsetX);
+
+            // 2.2b) Then draw the sideways particles 
+            drawParticles(boardRenderOffsetX);
+
             if (!gameStates[i].isShowCountdown() &&
                     !gameStates[i].isGameOver() &&
                     !gameStates[i].isPaused()) {
@@ -161,14 +167,6 @@ public class Renderer {
                 }
             }
 
-            // ─── 2.2a) First draw any row‐flashes ───
-            drawRowFlashes(boardRenderOffsetX);
-
-            // ─── 2.2b) Then draw the sideways particles ───
-            drawParticles(boardRenderOffsetX);
-
-            
-
             if (gameStates[i].isShowCountdown()) {
                 drawCountdown(i, boardRenderOffsetX, PLAYER_BOARD_VISUAL_WIDTH - 2 * TILE_SIZE);
             } else if (gameStates[i].isGameOver()) {
@@ -177,21 +175,21 @@ public class Renderer {
                 drawPlayerPauseMenu(i, boardRenderOffsetX, PLAYER_BOARD_VISUAL_WIDTH - 2 * TILE_SIZE);
             }
 
-            // ─── 4) Manually compute (x,y) for Score/Level ───
+            // 4) Manually compute (x,y) for Score/Level 
             // Example: bottom-left of the board, with 30px margin
             int scoreX = boardRenderOffsetX - 115;
             int scoreY = ge.mHeight - 100; // pick “base Y” near the bottom (adjust as needed)
 
             drawScoreAndLevel(i, scoreX, scoreY);
 
-            // ─── 5) Manually compute (x,y) for Hold HUD ───
+            // 5) Manually compute (x,y) for Hold HUD 
             // Example: top-left of the board, 30px from top border
             int holdX = boardRenderOffsetX - 115;
             int holdY = 80; // pick Y=50 as “30px below top” (adjust as needed)
 
             drawHoldPiece(i, holdX, holdY);
 
-            // ─── 6) Manually compute (x,y) for Next HUD ───
+            // 6) Manually compute (x,y) for Next HUD 
             // Example: right edge of board, 30px from top
             int nextX = boardRenderOffsetX + (Board.WIDTH * TILE_SIZE) + 50;
             int nextY = 130; // same 30px from top (adjust as needed)
@@ -446,12 +444,12 @@ public class Renderer {
 
     // Placeholder for a screen when ALL players are paused by global key
     private void drawGlobalPauseScreen() {
-        // ─── 1) Background (same as before) ───
+        // 1) Background (same as before) 
         ge.drawImage(assetManager.Background, 0, 0, ge.mWidth, ge.mHeight);
         ge.changeColor(new Color(0, 0, 0, 160));
         ge.drawSolidRectangle(0, 0, ge.mWidth, ge.mHeight);
 
-        // ─── 2) Create centered panel (same dimensions as ESC menu) ───
+        // 2) Create centered panel (same dimensions as ESC menu) 
         int panelW = Math.min(600, ge.mWidth - 80);
         int panelH = Math.min(400, ge.mHeight - 80);
         int panelX = (ge.mWidth - panelW) / 2;
@@ -462,7 +460,7 @@ public class Renderer {
         ge.changeColor(ge.white);
         ge.drawRectangle(panelX, panelY, panelW, panelH, 4);
 
-        // ─── 3) Draw title with same positioning as ESC menu ───
+        // 3) Draw title with same positioning as ESC menu 
         String title = "PAUSED";
         int titleFontSize = 48;
         ge.drawText(0, 0, "", titleFontSize);
@@ -473,7 +471,7 @@ public class Renderer {
         ge.changeColor(ge.white);
         ge.drawBoldText(titleX, titleY, title, titleFontSize);
 
-        // ─── 4) Draw options with same box dimensions as ESC menu ───
+        // 4) Draw options with same box dimensions as ESC menu 
         String[] options = {
                 "PRESS P TO RESUME",
                 "PRESS R FOR MAIN MENU",
@@ -519,12 +517,12 @@ public class Renderer {
     }
 
     private void drawEscPauseMenu() {
-        // ─── 1) Full‐window background + dimming overlay ───
+        // 1) Full‐window background + dimming overlay 
         ge.drawImage(assetManager.Background, 0, 0, ge.mWidth, ge.mHeight);
         ge.changeColor(new Color(0, 0, 0, 160)); // semi‐transparent black
         ge.drawSolidRectangle(0, 0, ge.mWidth, ge.mHeight);
 
-        // ─── 2) Enlarge the pause‐panel by +100px in both dimensions ───
+        // 2) Enlarge the pause‐panel by +100px in both dimensions 
         // (Up from 500×300 → now 600×400, but still capped if window is smaller.)
         int panelW = Math.min(600, ge.mWidth - 80); // allow a bit more breathing room
         int panelH = Math.min(400, ge.mHeight - 80);
@@ -536,7 +534,7 @@ public class Renderer {
         ge.changeColor(ge.white);
         ge.drawRectangle(panelX, panelY, panelW, panelH, 4); // 4px white border
 
-        // ─── 3) Draw “PAUSED” title centered inside that larger panel ───
+        // 3) Draw “PAUSED” title centered inside that larger panel 
         String title = "PAUSED";
         int titleFontSize = 48;
         ge.drawText(0, 0, "", titleFontSize); // force FontMetrics to that size
@@ -547,8 +545,8 @@ public class Renderer {
         ge.changeColor(ge.white);
         ge.drawBoldText(titleX, titleY, title, titleFontSize);
 
-        // ─── 4) Draw each option (“Resume”, “Help”, “Quit”), centered inside the panel
-        // ───
+        // 4) Draw each option (“Resume”, “Help”, “Quit”), centered inside the panel
+        // 
         String[] options = globalGameState.getPauseMenuOptions(); // still ["Resume","Help","Quit"]
         int selected = globalGameState.pauseMenuSelection;
 
@@ -609,12 +607,12 @@ public class Renderer {
 
     // Placeholder for a screen when the game is truly over for everyone
     private void drawOverallGameOverScreen() {
-        // ─── 1) Full-window background + dimming overlay ───
+        // 1) Full-window background + dimming overlay 
         ge.drawImage(assetManager.Background, 0, 0, ge.mWidth, ge.mHeight);
         ge.changeColor(new Color(0, 0, 0, 160)); // semi-transparent black
         ge.drawSolidRectangle(0, 0, ge.mWidth, ge.mHeight);
 
-        // ─── 2) Create centered panel ───
+        // 2) Create centered panel 
         int panelW = Math.min(600, ge.mWidth - 80);
         int panelH = Math.min(400, ge.mHeight - 80);
         int panelX = (ge.mWidth - panelW) / 2;
@@ -625,7 +623,7 @@ public class Renderer {
         ge.changeColor(ge.white);
         ge.drawRectangle(panelX, panelY, panelW, panelH, 4);
 
-        // ─── 3) Draw "GAME OVER" title ───
+        // 3) Draw "GAME OVER" title 
         String title = "GAME OVER";
         int titleFontSize = 48;
         ge.drawText(0, 0, "", titleFontSize);
@@ -636,7 +634,7 @@ public class Renderer {
         ge.changeColor(ge.white);
         ge.drawBoldText(titleX, titleY, title, titleFontSize);
 
-        // ─── 4) Draw final scores or winner ───
+        // 4) Draw final scores or winner 
         List<String> info = new ArrayList<>();
 
         if (game.getActivePlayers() == 1) {
@@ -965,12 +963,8 @@ public class Renderer {
 
     }
 
-    /**
-     * Draw a quick white bar across each cleared row, fading out.
-     */
-    /**
-     * Draw a glowing, expanding flash on each cleared row.
-     */
+    // Draw a quick white bar across each cleared row, fading out
+    // Draw a glowing, expanding flash on each cleared row
     private void drawRowFlashes(int boardOffsetX) {
         List<?> rawFlashes = game.getRowFlashes();
         for (Object obj : rawFlashes) {
@@ -1008,9 +1002,7 @@ public class Renderer {
         }
     }
 
-    /**
-     * Draw the previously spawned Particle squares (white, flying sideways).
-     */
+    // Draw the previously spawned Particle squares (white, flying sideways)
     private void drawParticles(int boardOffsetX) {
         List<?> rawList = game.getParticles();
         for (Object obj : rawList) {

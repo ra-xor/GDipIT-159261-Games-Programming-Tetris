@@ -113,6 +113,6 @@ Below are some gameplay screenshots showing different game states:
 
 ## 🧩 Class Diagram
 
-![Tetris UML Diagram](assets/Tetris_Game_Classes.png)
+![Tetris UML Diagram](assets/Tetris_Game%20_Classes.png)
 
 *This UML diagram illustrates the main architecture of the Tetris game and how different components interact with each other.*

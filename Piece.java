@@ -28,7 +28,7 @@ public class Piece {
         this.activeShape = new int[4][2];
         this.pieceGenerator = generator;
         this.assetManager = assetManager;
-        this.currentRotation = 0; // Initialize rotation
+        this.currentRotation = 0; // Initialise rotation
     }
 
     // Copy constructor for simulation
@@ -80,6 +80,7 @@ public class Piece {
         }
 
         if (this.shapeId == 0) {
+            pieceY++;
         }
     }
 

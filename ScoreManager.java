@@ -17,7 +17,7 @@ public class ScoreManager {
 
     public ScoreManager(Board board) {
         this.board = board;
-        // Initialize score manager with default values
+        // Initialise score manager with default values
         reset();
     }
 

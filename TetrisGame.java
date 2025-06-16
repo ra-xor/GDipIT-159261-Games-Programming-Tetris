@@ -82,10 +82,10 @@ public class TetrisGame extends GameEngine {
         }
     }
 
-    // ─── 1.1b) Track active row‐flashes ───
+    // 1.1b) Track active row‐flashes
     private List<RowFlash> rowFlashes = new ArrayList<>();
 
-    // ─── 3.1b) A list to hold all active particles ───
+    // 3.1b) A list to hold all active particles
     private List<Particle> particles = new ArrayList<>();
     private Random particleRng = new Random();
     // private static final int NUM_PLAYERS = 2; // Replaced by activePlayers
@@ -177,14 +177,14 @@ private AIController aiController; // Added AI Controller instance
         canHolds = new boolean[activePlayers];
 
         for (int i = 0; i < activePlayers; i++) {
-                boards[i] = new Board(renderer.getAssetManager());
-                pieceGenerator = new PieceGenerator();
-                currentPieces[i] = new Piece(boards[i], pieceGenerator, renderer.getAssetManager());
-                scoreManagers[i] = new ScoreManager(boards[i]); // Pass board reference
-                gameStates[i] = new GameState(); // Each player has their own game state (for game over, countdown etc)
+                        boards[i] = new Board(renderer.getAssetManager());
+            pieceGenerator = new PieceGenerator();
+            currentPieces[i] = new Piece(boards[i], pieceGenerator, renderer.getAssetManager());
+            scoreManagers[i] = new ScoreManager(boards[i]); // Pass board reference
+            gameStates[i] = new GameState(); // Each player has their own game state (for game over, countdown etc)
                                              // but globalGameState.currentMode is the authority on overall mode
-                gameStates[i].setCurrentMode(mode); // Set player's state to the active game mode
-                inputHandlers[i] = new InputHandler(this, i);
+            gameStates[i].setCurrentMode(mode); // Set player's state to the active game mode
+            inputHandlers[i] = new InputHandler(this, i);
         }
 
         // Update renderer with the now initialised game components
@@ -253,6 +253,7 @@ private AIController aiController; // Added AI Controller instance
     }
 
     private void spawnNewPiece(int playerIndex) {
+        updateFallInterval(playerIndex);
         if (!gameHasStarted || playerIndex < 0 || playerIndex >= activePlayers)
             return;
         currentPieces[playerIndex].spawnNewPiece();
@@ -351,7 +352,7 @@ private AIController aiController; // Added AI Controller instance
 
     @Override
     public void update(double dt) {
-        // ─── 1.3a) Advance & remove dead particles ───
+        // 1.3a) Advance & remove dead particles
         Iterator<Particle> pit = particles.iterator();
         while (pit.hasNext()) {
             Particle p = pit.next();
@@ -360,7 +361,7 @@ private AIController aiController; // Added AI Controller instance
                 pit.remove();
         }
 
-        // ─── 1.3b) Advance & remove expired row‐flashes ───
+        // 1.3b) Advance & remove expired row‐flashes
         Iterator<RowFlash> fit = rowFlashes.iterator();
         while (fit.hasNext()) {
             RowFlash f = fit.next();
@@ -469,8 +470,9 @@ private AIController aiController; // Added AI Controller instance
         // 1) Lock the piece into the board
         currentPieces[playerIndex].lockPiece();
         renderer.getAssetManager().playSound(renderer.getAssetManager().lockSound);
+        updateFallInterval(playerIndex);
 
-        // ─── 1. PRE‐SCAN visible rows for “full” before clearing ───
+        // 1. PRE‐SCAN visible rows for “full” before clearing
         List<Integer> rowsToFlash = new ArrayList<>();
         int[][] grid = boards[playerIndex].getGrid();
         for (int y = Board.BUFFER_HEIGHT; y < Board.TOTAL_HEIGHT; y++) {
